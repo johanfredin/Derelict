@@ -9,7 +9,7 @@ package se.jaygames.derelict.utils;
 public enum WorldType {
 	
 	/** The grass world */
-	START("");
+	START("test");
 	
 	private String name;
 	

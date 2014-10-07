@@ -7,6 +7,8 @@ import se.jaygames.derelict.utils.WorldType;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
 
@@ -161,8 +163,16 @@ public class GameScreen extends BaseScreen {
 	 */
 	private void setupLevel() {
 		Assets.getInstance().loadTileMap(worldType, levelIndex, true);
-		level = new Level("" + levelIndex + ".tmx", this);
+		level = new Level("levels/" + worldType.getDisplayName() + "/level-" + levelIndex + ".tmx", this);
 		state = State.PLAYING;
+	}
+
+	public SpriteBatch getSpriteBatch() {
+		return this.batch;
+	}
+
+	public OrthographicCamera getCamera() {
+		return this.camera;
 	}
 	
 }
