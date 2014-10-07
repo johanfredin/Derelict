@@ -93,13 +93,14 @@ public class Assets implements Disposable {
 	 * Unloads all the menu screen assets
 	 */
 	public void unloadMenuAssets() {
-		
+		manager.unload("sprites/objects/test/hero.png");
 	}
 
 	/**
 	 * Load the in game assets
 	 */
 	public void loadInGameAssets() {
+		manager.load("sprites/objects/test/hero.png", Texture.class);
 		
 		// Set the manager for the textures
 		Texture.setAssetManager(manager);
@@ -118,7 +119,7 @@ public class Assets implements Disposable {
 		p.textureMagFilter = TextureFilter.Nearest;
 		p.textureMinFilter = TextureFilter.Nearest;
 		
-		String path = isTestLevel ? "levels/level-0" : "levels/" + worldType.getDisplayName().toLowerCase() + "/level-";
+		String path = isTestLevel ? "levels/test/level-" : "levels/" + worldType.getDisplayName().toLowerCase() + "/level-";
 		manager.load(path + index + ".tmx", TiledMap.class, p);
 		manager.finishLoading();
 	}
@@ -131,7 +132,7 @@ public class Assets implements Disposable {
 	 */
 	public void unloadTileMap(WorldType worldType, byte index, boolean isTestLevel) {
 		try {
-			String path = isTestLevel ? "levels/level-0" : "levels/" + worldType.getDisplayName().toLowerCase() + "/level-";
+			String path = isTestLevel ? "levels/test/level-" : "levels/" + worldType.getDisplayName().toLowerCase() + "/level-";
 				manager.unload(path + index + ".tmx");
 		} catch (GdxRuntimeException gre) {
 			Logger l = new Logger("IOError", Logger.ERROR);

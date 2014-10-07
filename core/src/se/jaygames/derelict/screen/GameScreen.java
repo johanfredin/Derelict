@@ -20,7 +20,7 @@ public class GameScreen extends BaseScreen {
 	private byte levelIndex = 0;
 	private State state = State.PLAYING;
 	private Level level;
-	private WorldType worldType;
+	private WorldType worldType = WorldType.START;
 	
 	/**
 	 * Different states that this screen can have
@@ -127,7 +127,7 @@ public class GameScreen extends BaseScreen {
 	@Override
 	public void hide() {
 		level.dispose();
-		Assets.getInstance().unloadTileMap(worldType, levelIndex, false);
+		Assets.getInstance().unloadTileMap(worldType, levelIndex, true);
 		Gdx.app.log(this.getClass().getSimpleName(), "hide called");
 	}
 	
@@ -152,7 +152,7 @@ public class GameScreen extends BaseScreen {
 			break;
 		} 
 		
-		Assets.getInstance().unloadTileMap(worldType, indexOfLevelToUnload, false);
+		Assets.getInstance().unloadTileMap(worldType, indexOfLevelToUnload, true);
 		setupLevel();
 	}
 	
@@ -160,7 +160,7 @@ public class GameScreen extends BaseScreen {
 	 * Reloads the tilemap and reinstantiates the level, makes a switch on what world we are at as well
 	 */
 	private void setupLevel() {
-		Assets.getInstance().loadTileMap(worldType, levelIndex, false);
+		Assets.getInstance().loadTileMap(worldType, levelIndex, true);
 		level = new Level("" + levelIndex + ".tmx", this);
 		state = State.PLAYING;
 	}
