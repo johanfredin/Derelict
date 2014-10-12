@@ -1,8 +1,8 @@
 package se.jaygames.derelict.object;
 
-import se.jaygames.derelict.utils.Assets;
+import se.fredin.gdxtensions.object.GameObject;
+import se.fredin.gdxtensions.res.Assets;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,21 +18,21 @@ public class Player extends GameObject {
 	}
 
 	@Override
-	public void tick(float deltaTime) {
+	public void tick(float deltaTime, GameObject gameObject) {
 		speed = 4;
 		velocity.set(speed, speed);
 		position.add(velocity);
 	}
 
 	@Override
-	public void render(OrthographicCamera camera, SpriteBatch batch, Player player) {
+	public void render(SpriteBatch batch) {
 		batch.draw(currentFrame, position.x, position.y);
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
+		
 	}
+
 
 }

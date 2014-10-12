@@ -1,9 +1,10 @@
 package se.jaygames.derelict.screen;
 
+import se.fredin.gdxtensions.res.Assets;
+import se.fredin.gdxtensions.screen.BaseScreen;
+import se.fredin.gdxtensions.utils.WorldType;
 import se.jaygames.derelict.level.Level;
 import se.jaygames.derelict.screen.ingame.Dialog;
-import se.jaygames.derelict.utils.Assets;
-import se.jaygames.derelict.utils.WorldType;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -103,7 +104,7 @@ public class GameScreen extends BaseScreen {
 	@Override
 	public void resize(int width, int height) {
 		//very useful and easy function to get preferred width and height and still keeping the same aspect ratio :)
-		Vector2 size = Scaling.fill.apply(width, height, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+		Vector2 size = Scaling.fill.apply(width, height, viewportWidth, viewportHeight);
 
 		camera.setToOrtho(false, size.x, size.y);
 		camera.update();

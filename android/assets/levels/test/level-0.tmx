@@ -21,6 +21,7 @@
  </layer>
  <objectgroup name="objects-32px">
   <object name="spawn" gid="385" x="226" y="448"/>
+  <object x="240" y="432"/>
  </objectgroup>
  <objectgroup color="#a42309" name="collision">
   <object x="192" y="96" width="96" height="96"/>
