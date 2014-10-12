@@ -2,9 +2,9 @@ package se.jaygames.derelict.screen;
 
 import se.fredin.gdxtensions.res.Assets;
 import se.fredin.gdxtensions.screen.BaseScreen;
+import se.fredin.gdxtensions.utils.ScreenType;
 import se.fredin.gdxtensions.utils.WorldType;
 import se.jaygames.derelict.level.Level;
-import se.jaygames.derelict.screen.ingame.Dialog;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -113,18 +113,11 @@ public class GameScreen extends BaseScreen {
 	@Override
 	public void pause() {
 		super.pause();
-		if(Dialog.screenTapped) {
-			Dialog.isPaused = true;
-		}
 	}
 
 	@Override
 	public void resume() {
 		super.resume();
-		
-		if(Dialog.screenTapped) {
-			Dialog.isPaused = true;
-		}
 	}
 
 	@Override
