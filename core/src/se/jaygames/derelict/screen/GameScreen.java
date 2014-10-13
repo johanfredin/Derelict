@@ -1,6 +1,6 @@
 package se.jaygames.derelict.screen;
 
-import se.fredin.gdxtensions.res.Assets;
+import se.fredin.gdxtensions.assetmanagement.Assets;
 import se.fredin.gdxtensions.screen.BaseScreen;
 import se.fredin.gdxtensions.utils.ScreenType;
 import se.fredin.gdxtensions.utils.WorldType;

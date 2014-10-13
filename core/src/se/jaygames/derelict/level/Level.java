@@ -1,7 +1,7 @@
 package se.jaygames.derelict.level;
 
+import se.fredin.gdxtensions.assetmanagement.Assets;
 import se.fredin.gdxtensions.level.TiledMapLevel;
-import se.fredin.gdxtensions.res.Assets;
 import se.fredin.gdxtensions.utils.ScreenType;
 import se.jaygames.derelict.object.Player;
 import se.jaygames.derelict.screen.GameScreen;
