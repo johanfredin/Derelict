@@ -47,17 +47,10 @@ public class Level extends TiledMapLevel<GameScreen> {
 
 	public void tick(float deltaTime) {
 		player.tick(deltaTime, null);
-		moveCamera(player, deltaTime);
-	}
-
-	private void moveCamera(Player player2, float deltaTime) {
-		float x = player.getPosition().x;
-		float y = player.getPosition().y;
-		camera.position.set(x, y, 0);
+		moveCamera(player.getPosition(), mapWidth, mapHeight);
 	}
 
 	public void render(SpriteBatch batch, OrthographicCamera camera) {
-
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		mapRenderer.setView(camera);
@@ -65,8 +58,6 @@ public class Level extends TiledMapLevel<GameScreen> {
 		player.render(batch);
 		mapRenderer.renderTileLayer(foregroundLayer);
 		batch.end();
-		
-		camera.update();
 	}
 
 	public void dispose() {
