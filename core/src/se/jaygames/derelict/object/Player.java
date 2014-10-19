@@ -25,7 +25,7 @@ public class Player extends GameObject {
 	private GeneralInput input;
 	
 	public Player(Vector2 position) {
-		super(position);
+		super(position, 32, 32);
 		this.speed = DEFAULT_SPEED;
 		this.input = new GeneralInput(InputDevice.KEYBOARD);
 		TextureRegion heroSpriteSheet = new TextureRegion((Texture) Assets.getInstance().get("sprites/objects/test/hero.png"));
@@ -37,7 +37,9 @@ public class Player extends GameObject {
 	}
 
 	@Override
-	public void tick(float deltaTime, GameObject gameObject) {
+	public void tick(float deltaTime, GameObject gameObject) {}
+	
+	public void tick(float deltaTime) {
 		position.add(velocity);
 		bounds.setPosition(position);
 		animate(deltaTime);
