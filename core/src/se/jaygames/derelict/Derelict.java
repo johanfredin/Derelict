@@ -1,5 +1,7 @@
 package se.jaygames.derelict;
+import se.fredin.gdxtensions.assetmanagement.Assets;
 import se.jaygames.derelict.screen.GameScreen;
+import se.jaygames.derelict.utils.Loader;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -40,6 +42,8 @@ public class Derelict extends Game {
 	public void create() {	
 		// We want to have control over the back button!
 		Gdx.input.setCatchBackKey(true);
+		Assets.LOAD_SYNCHRONOUSLY = true;
+		Loader.load();
 		setScreen(new GameScreen(this, (byte)0));
 	}
 	

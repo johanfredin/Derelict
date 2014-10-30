@@ -6,9 +6,6 @@
  <tileset firstgid="257" name="background" tilewidth="32" tileheight="32">
   <image source="../../sprites/tilesets/TileA5.png" width="256" height="512"/>
  </tileset>
- <tileset firstgid="385" name="hero" tilewidth="32" tileheight="32">
-  <image source="../../sprites/objects/test/hero.png" width="96" height="128"/>
- </tileset>
  <layer name="background" width="20" height="20">
   <data encoding="base64" compression="zlib">
    eJxjZmRgYB7FVMVsWPjIGJ9aepkHwoxYzEI3k1TzCGFquQ+X/0fNo6152MxET5OUmocuhs0MYtIaeroj1n2jmHgMAI5GBy0=
@@ -20,8 +17,7 @@
   </data>
  </layer>
  <objectgroup name="objects-32px">
-  <object name="spawn" gid="385" x="226" y="448"/>
-  <object x="240" y="432"/>
+  <object name="spawn" x="240" y="432"/>
  </objectgroup>
  <objectgroup color="#a42309" name="collision">
   <object x="192" y="96" width="96" height="72"/>
