@@ -45,8 +45,7 @@ public class GameScreen extends BaseScreen {
 	public GameScreen(Game game, byte levelIndex) {
 		super(game);
 		this.levelIndex = levelIndex;
-//		AudioUtils.getInstance().playMusic(nameOfTrackToPlay, true);
-		setupLevel();
+		this.setupLevel();
 	}
 	
 	/** Retrieve the game instance */
@@ -77,33 +76,26 @@ public class GameScreen extends BaseScreen {
 	
 	@Override
 	public void render(float delta) {
-		if (delta > 0.1f) { 
-			delta = 0.1f;
-		}
-		
-		if(state == State.PLAYING) {
+		switch(state) {
+		case PLAYING:
 			level.tick(delta);
 			level.render(batch);
-		} else {
-			switch(state) {
-			case RETURN_TO_LEVEL_SELECT:
-				break;
-			case RETURN_TO_MYCOW:
-				break;
-			case RETURN_TO_CREDITS:
-				break;
-			default:
-				this.switchLevel();
-				break;
-			}
+			break;
+		case RETURN_TO_LEVEL_SELECT:
+			break;
+		case RETURN_TO_MYCOW:
+			break;
+		case RETURN_TO_CREDITS:
+			break;
+		default:
+			this.switchLevel();
+			break;
 		}
 	}
 	
 	@Override
 	public void resize(int width, int height) {
-		//very useful and easy function to get preferred width and height and still keeping the same aspect ratio :)
 		Vector2 size = Scaling.fill.apply(width, height, viewportWidth, viewportHeight);
-
 		camera.setToOrtho(false, size.x, size.y);
 		camera.update();
 	}

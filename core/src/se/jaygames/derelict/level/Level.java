@@ -1,9 +1,10 @@
 package se.jaygames.derelict.level;
 
 import se.fredin.gdxtensions.level.TiledMapLevel;
-import se.fredin.gdxtensions.utils.Dialog;
 import se.fredin.gdxtensions.utils.ScreenType;
 import se.fredin.gdxtensions.utils.ShapeRendererPlus;
+import se.fredin.gdxtensions.utils.text.AnimatedText;
+import se.fredin.gdxtensions.utils.text.OutputFormatter.LineBreakSettings;
 import se.jaygames.derelict.object.Player;
 import se.jaygames.derelict.screen.GameScreen;
 
@@ -24,7 +25,7 @@ public class Level extends TiledMapLevel<GameScreen> {
 	private TiledMapTileLayer mainLayer;
 	private Player player;
 	private Array<Rectangle> hardBlocks;
-	private Dialog dialog;
+	private AnimatedText animatedText;
 	
 	public Level(String levelName, GameScreen gameScreen) {
 		super(levelName, gameScreen);
@@ -46,14 +47,15 @@ public class Level extends TiledMapLevel<GameScreen> {
 		this.shapeRendererPlus = new ShapeRendererPlus(camera, ShapeType.Line);
 		camera.setBounds(mapWidth, mapHeight);
 		
-		this.dialog = new Dialog("I believe whatever doesn't kill you simply makes you stranger", .05f, 20, false);
+		this.animatedText = new AnimatedText("Hey yall mothafuckas ass ass ass ass", LineBreakSettings.ABSOLUTE);
+		this.animatedText.setLogToConsole(false);
 	}
 
 	@Override
 	public void tick(float deltaTime) {
 		player.tick(deltaTime);
 		camera.follow(player.getPosition());
-		dialog.tick(deltaTime, "Hello Wayne");
+		animatedText.tick(deltaTime);
 	}
 
 	@Override

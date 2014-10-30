@@ -45,7 +45,7 @@ public class Derelict extends Game {
 	
 	@Override
 	public void dispose() {
-		Gdx.app.log("Cowdash " + this.getClass().getSimpleName(), "\t dispose called");
+		Gdx.app.log("Derelict " + this.getClass().getSimpleName(), "\t dispose called");
 		super.dispose();
 	}
 
