@@ -3,10 +3,9 @@ package se.jaygames.derelict.level;
 import se.fredin.gdxtensions.level.TiledMapLevel;
 import se.fredin.gdxtensions.utils.ScreenType;
 import se.fredin.gdxtensions.utils.ShapeRendererPlus;
-import se.fredin.gdxtensions.utils.text.AnimatedText;
-import se.fredin.gdxtensions.utils.text.OutputFormatter.LineBreakSettings;
 import se.jaygames.derelict.object.Player;
 import se.jaygames.derelict.screen.GameScreen;
+import se.jaygames.derelict.screen.ingame.Dialogs;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -25,7 +24,7 @@ public class Level extends TiledMapLevel<GameScreen> {
 	private TiledMapTileLayer mainLayer;
 	private Player player;
 	private Array<Rectangle> hardBlocks;
-	private AnimatedText animatedText;
+	private Dialogs dialogs;
 	
 	public Level(String levelName, GameScreen gameScreen) {
 		super(levelName, gameScreen);
@@ -45,17 +44,16 @@ public class Level extends TiledMapLevel<GameScreen> {
 			hardBlocks.add(rectangleMapObject.getRectangle());
 		}
 		this.shapeRendererPlus = new ShapeRendererPlus(camera, ShapeType.Line);
-		camera.setBounds(mapWidth, mapHeight);
-		
-		this.animatedText = new AnimatedText("Hey yall mothafuckas ass ass ass ass", LineBreakSettings.ABSOLUTE);
-		this.animatedText.setLogToConsole(false);
+		this.camera.setBounds(mapWidth, mapHeight);
+		this.dialogs = new Dialogs(this);
+		this.dialogs.setPosition(player.getPosition());
 	}
 
 	@Override
 	public void tick(float deltaTime) {
 		player.tick(deltaTime);
 		camera.follow(player.getPosition());
-		animatedText.tick(deltaTime);
+		dialogs.tick(deltaTime);
 	}
 
 	@Override
@@ -74,6 +72,8 @@ public class Level extends TiledMapLevel<GameScreen> {
 		shapeRendererPlus.renderBoundaries(player.getBounds());
 		shapeRendererPlus.renderBoundaries(this.hardBlocks);
 		shapeRendererPlus.end();
+		
+		dialogs.render();
 	}
 
 	public void dispose() {
