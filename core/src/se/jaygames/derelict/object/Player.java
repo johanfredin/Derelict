@@ -6,6 +6,7 @@ import se.fredin.gdxtensions.input.InputDevice;
 import se.fredin.gdxtensions.object.GameObject;
 import se.fredin.gdxtensions.utils.AnimationUtils;
 
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -88,5 +89,8 @@ public class Player extends GameObject {
 			setDirection(DIRECTION_NONE);
 		}
 	}
-
+	
+	public InputProcessor getInput() {
+		return input.getKeyBoardInputAdapter();
+	}
 }

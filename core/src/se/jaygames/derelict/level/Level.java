@@ -7,6 +7,7 @@ import se.jaygames.derelict.object.Player;
 import se.jaygames.derelict.screen.GameScreen;
 import se.jaygames.derelict.screen.ingame.Dialogs;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
@@ -47,6 +48,10 @@ public class Level extends TiledMapLevel<GameScreen> {
 		this.camera.setBounds(mapWidth, mapHeight);
 		this.dialogs = new Dialogs(this);
 		this.dialogs.setPosition(player.getPosition());
+		
+		this.inputMultiplexer.addProcessor(player.getInput());
+		this.inputMultiplexer.addProcessor(dialogs.getStage());
+		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
 	@Override
