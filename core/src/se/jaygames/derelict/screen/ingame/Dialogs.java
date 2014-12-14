@@ -6,6 +6,7 @@ import se.fredin.gdxtensions.screen.ingame.InGameScreen;
 import se.jaygames.derelict.level.Level;
 import se.jaygames.derelict.utils.Loader;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
@@ -17,9 +18,10 @@ public class Dialogs extends InGameScreen {
 	
 	public Dialogs(Level levelBase) {
 		super(levelBase, Loader.PACKFILES_PATH + "dialog.pack");
-		this.font = new AnimatedBitmapFont();
+		this.font = new AnimatedBitmapFont(Gdx.files.internal(Loader.FONT_PATH + "font.fnt"));
+		
 		TextFieldStyle style = new TextFieldStyle(font, Color.RED, null, null, skin.getDrawable("bg"));
-		this.dialog = new Dialog("I believde I can Achieve whateeevaaaah and this is not too criminally insane wayne or is it?", style);
+		this.dialog = new Dialog("I believe whatever is fine and i dont care wayne, why dont you go bother them sheep while you're at it", style);
 		this.stage.addActor(dialog);
 	}
 	
