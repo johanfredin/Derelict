@@ -22,7 +22,7 @@ public class Dialogs extends InGameScreen {
 		
 		TextFieldStyle style = new TextFieldStyle(font, Color.RED, null, null, skin.getDrawable("bg"));
 		this.dialog = new Dialog("I believe whatever is fine and i dont care wayne, why dont you go bother them sheep while you're at it", style);
-		this.stage.addActor(dialog);
+		this.addActorsToStage(dialog.getBounds(), dialog);
 	}
 	
 	public void render() {
@@ -38,7 +38,7 @@ public class Dialogs extends InGameScreen {
 	}
 	
 	public void setPosition(float x, float y) {
-		this.dialog.setPosition(0, 0);
+		this.dialog.setPosition(x, y);
 	}
 	
 	
