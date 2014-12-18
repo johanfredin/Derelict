@@ -29,8 +29,16 @@ public class Dialogs extends InGameScreen {
 		stage.draw();
 	}
 	
+	
+	float tmp = 0;
+	
 	public void tick(float delta) {
 		stage.act(delta);
+		tmp += delta;
+		System.out.println(tmp);
+		if(tmp >= 3.0f && !dialog.isTimeToCloseDialog()) {
+			dialog.closeDialog(1.8f);
+		}
 	}
 	
 	public void setPosition(Vector2 position) {

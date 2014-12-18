@@ -47,7 +47,6 @@ public class Level extends TiledMapLevel<GameScreen> {
 		this.shapeRendererPlus = new ShapeRendererPlus(camera, ShapeType.Line);
 		this.camera.setBounds(mapWidth, mapHeight);
 		this.dialogs = new Dialogs(this);
-		this.dialogs.setPosition(player.getPosition());
 		
 		this.inputMultiplexer.addProcessor(player.getInput());
 		this.inputMultiplexer.addProcessor(dialogs.getStage());
