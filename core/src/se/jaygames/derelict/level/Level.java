@@ -1,13 +1,16 @@
 package se.jaygames.derelict.level;
 
 import se.fredin.gdxtensions.level.TiledMapLevel;
+import se.fredin.gdxtensions.screen.ingame.Dialogs;
 import se.fredin.gdxtensions.utils.ScreenType;
 import se.fredin.gdxtensions.utils.ShapeRendererPlus;
+import se.fredin.gdxtensions.xml.DialogXMLParser;
 import se.jaygames.derelict.object.Player;
 import se.jaygames.derelict.screen.GameScreen;
-import se.jaygames.derelict.screen.ingame.Dialogs;
+import se.jaygames.derelict.utils.Loader;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
@@ -46,11 +49,14 @@ public class Level extends TiledMapLevel<GameScreen> {
 		}
 		this.shapeRendererPlus = new ShapeRendererPlus(camera, ShapeType.Line);
 		this.camera.setBounds(mapWidth, mapHeight);
-		this.dialogs = new Dialogs(this);
+		DialogXMLParser dialogXMLParser = new DialogXMLParser("dialogs/example.xml");
+		this.dialogs = new Dialogs(dialogXMLParser.getXMLDialog("meet-hero-one"), Loader.PACKFILES_PATH + "dialog.pack", Loader.FONT_PATH + "font.fnt", Color.RED);
+		this.dialogs.startDialogs();
 		
 		this.inputMultiplexer.addProcessor(player.getInput());
 		this.inputMultiplexer.addProcessor(dialogs.getStage());
 		Gdx.input.setInputProcessor(inputMultiplexer);
+		
 	}
 
 	@Override
@@ -79,7 +85,8 @@ public class Level extends TiledMapLevel<GameScreen> {
 		
 		dialogs.render();
 	}
-
+	
+	@Override
 	public void dispose() {
 		player.dispose();
 		mapRenderer.dispose();
