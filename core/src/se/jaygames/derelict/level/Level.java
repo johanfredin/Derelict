@@ -51,7 +51,6 @@ public class Level extends TiledMapLevel<GameScreen> {
 		this.camera.setBounds(mapWidth, mapHeight);
 		DialogXMLParser dialogXMLParser = new DialogXMLParser("dialogs/example.xml");
 		this.dialogs = new Dialogs(dialogXMLParser.getXMLDialog("meet-hero-one"), Loader.PACKFILES_PATH + "dialog.pack", Loader.FONT_PATH + "font.fnt", Color.RED);
-		this.dialogs.startDialogs();
 		
 		this.inputMultiplexer.addProcessor(player.getInput());
 		this.inputMultiplexer.addProcessor(dialogs.getStage());

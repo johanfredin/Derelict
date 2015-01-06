@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GDXTensions-level-dialogs>
 	<level-dialogs>
-	    <!-- Each level-dialog element needs the key attribute for the you to know in what situation you want it -->
-		<level-dialog key="meet-hero-one">
-	       	<dialog header="Hero One" x="600.0" y="200.0">
+	    <!-- Each level-dialog element needs the key attribute for you to know in what situation you want it -->
+ 		<level-dialog key="meet-hero-one" pos="600,200"> 
+ 		    <!-- You may also add a position attribute to the parent, if so then 
+ 		    	 all the children will have that position unless you give them one, 
+ 		    	 if so it will override the parents position -->
+	       	<dialog header="Hero One" pos="400,250" timeToDisplay="0.1">
 		   	    This is an example of what a character named Hero One would say, notice there is no line break in the xml, the program handles that for you!
 	       	</dialog>
 		
-	  	    <dialog x="600.0" y="150.0">
-	  	        Notice here that no name attribute is required
+	  	    <dialog pos="300,150" timeToDisplay="2.1">
+	  	        Notice here that no name attribute is required, here the position will also be overriden
 	  	    </dialog>
 	  	    
-	  	    <dialog header="Hero Two" timeToDisplay="0.1" y="220.0">
+	  	    <dialog header="Hero Two" timeToDisplay="2.1">
 	       		This dialog from Hero Two will expire within 3 seconds
 	       	</dialog>
 	    </level-dialog>
 					
 	   	<level-dialog key="opening-door1-without-key">
-	   		<dialog header="Hero One" x="200.0" y="150.0">
+	   		<dialog header="Hero One" pos="300,200">
 	   		    God damn door is locked
 	   		</dialog>
-	   	    <dialog header="Door" x="300" y="180.0">
+	   	    <dialog header="Door" pos="300,180.0">
 	   	        Too bad for you
 	   	    </dialog>
-	   	    <dialog x="400" y="200">Likewise...</dialog>
+	   	    <dialog pos="400,200">Likewise...</dialog>
 	   	</level-dialog>
 	   	
 	   	<!-- A level-dialog block can be only one dialog if needed, for ex when a popup message shows up or similar -->
 	   	<level-dialog key="pistol-1-found">
-	   	    <dialog x="150" y="200.0">You found the gun!</dialog>
+	   	    <dialog pos="150,200">You found the gun!</dialog>
 	   	</level-dialog>
 	   	
 	   	<level-dialog key="test">
-	   	    <dialog header="Johan The Man" x="150" y="200.0">
+	   	    <dialog header="Johan The Man" pos="150,200">
 	   	        Hello LibGDX and cheers to you GDXTensions this is Derelict hope you like it   CC !
 	   	    </dialog>
 	   	</level-dialog>
