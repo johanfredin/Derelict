@@ -1,8 +1,7 @@
 package se.jaygames.derelict.object;
 
 import se.fredin.gdxtensions.assetmanagement.Assets;
-import se.fredin.gdxtensions.input.GeneralInput;
-import se.fredin.gdxtensions.input.InputDevice;
+import se.fredin.gdxtensions.input.BaseInput;
 import se.fredin.gdxtensions.object.GameObject;
 import se.fredin.gdxtensions.utils.AnimationUtils;
 
@@ -23,12 +22,12 @@ public class Player extends GameObject {
 	private Animation downAnimation;
 	
 	//TODO: For now only fixed keyboard, fix later to map to any keys or gamepad or touchpad
-	private GeneralInput input;
+	private BaseInput input;
 	
-	public Player(Vector2 position) {
+	public Player(Vector2 position, BaseInput input) {
 		super(position, 32, 32);
 		this.speed = DEFAULT_SPEED;
-		this.input = new GeneralInput(InputDevice.KEYBOARD);
+		this.input = input;
 		TextureRegion heroSpriteSheet = new TextureRegion((Texture) Assets.getInstance().get("sprites/objects/test/hero.png"));
 		this.leftAnimation = AnimationUtils.getAnimation(heroSpriteSheet, .10f, 32, 32, "0-11");
 		this.rightAnimation = AnimationUtils.getAnimation(heroSpriteSheet, .10f, 32, 32, false, false, 6,7,8);
@@ -91,6 +90,6 @@ public class Player extends GameObject {
 	}
 	
 	public InputProcessor getInput() {
-		return input.getKeyBoardInputAdapter();
+		return input;
 	}
 }

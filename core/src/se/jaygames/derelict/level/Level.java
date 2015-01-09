@@ -40,7 +40,8 @@ public class Level extends TiledMapLevel<GameScreen> {
 		float spawnX = spawnObject.getProperties().get("x", Float.class);
 		float spawnY = spawnObject.getProperties().get("y", Float.class);
 		Vector2 spawnPoint = new Vector2(spawnX, spawnY);
-		this.player = new Player(spawnPoint);
+		
+		this.player = new Player(spawnPoint, baseInput);
 		
 		this.hardBlocks = new Array<Rectangle>();
 		Array<RectangleMapObject> blockObjects = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
@@ -50,12 +51,11 @@ public class Level extends TiledMapLevel<GameScreen> {
 		this.shapeRendererPlus = new ShapeRendererPlus(camera, ShapeType.Line);
 		this.camera.setBounds(mapWidth, mapHeight);
 		DialogXMLParser dialogXMLParser = new DialogXMLParser("dialogs/example.xml");
-		this.dialogs = new Dialogs(dialogXMLParser.getXMLDialog("meet-hero-one"), Loader.PACKFILES_PATH + "dialog.pack", Loader.FONT_PATH + "font.fnt", Color.RED);
+		this.dialogs = new Dialogs(baseInput, dialogXMLParser.getXMLDialog("meet-hero-one"), Loader.PACKFILES_PATH + "dialog.pack", Loader.FONT_PATH + "font.fnt", Color.RED);
 		
-		this.inputMultiplexer.addProcessor(player.getInput());
+		this.inputMultiplexer.addProcessor(baseInput);
 		this.inputMultiplexer.addProcessor(dialogs.getStage());
 		Gdx.input.setInputProcessor(inputMultiplexer);
-		
 	}
 
 	@Override
@@ -90,6 +90,7 @@ public class Level extends TiledMapLevel<GameScreen> {
 		player.dispose();
 		mapRenderer.dispose();
 	}
+	
 
 	@Override
 	public void switchLevel() {
