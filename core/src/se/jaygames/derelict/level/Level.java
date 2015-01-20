@@ -1,5 +1,6 @@
 package se.jaygames.derelict.level;
 
+import se.fredin.gdxtensions.collision.CollisionHandler;
 import se.fredin.gdxtensions.level.TiledMapLevel;
 import se.fredin.gdxtensions.screen.ingame.Dialogs;
 import se.fredin.gdxtensions.utils.ScreenType;
@@ -42,20 +43,21 @@ public class Level extends TiledMapLevel<GameScreen> {
 		Vector2 spawnPoint = new Vector2(spawnX, spawnY);
 		
 		this.player = new Player(spawnPoint, baseInput);
-		
 		this.hardBlocks = new Array<Rectangle>();
 		Array<RectangleMapObject> blockObjects = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
 		for(RectangleMapObject rectangleMapObject : blockObjects) {
 			hardBlocks.add(rectangleMapObject.getRectangle());
 		}
 		this.shapeRendererPlus = new ShapeRendererPlus(camera, ShapeType.Line);
-		this.camera.setBounds(mapWidth, mapHeight);
+//		this.camera.setBounds(mapWidth, mapHeight);
 		DialogXMLParser dialogXMLParser = new DialogXMLParser("dialogs/example.xml");
 		this.dialogs = new Dialogs(baseInput, dialogXMLParser.getXMLDialog("meet-hero-one"), Loader.PACKFILES_PATH + "dialog.pack", Loader.FONT_PATH + "font.fnt", Color.RED);
 		
 		this.inputMultiplexer.addProcessor(baseInput);
 		this.inputMultiplexer.addProcessor(dialogs.getStage());
 		Gdx.input.setInputProcessor(inputMultiplexer);
+		
+		this.collisionHandler = new CollisionHandler(player);
 	}
 
 	@Override
@@ -63,6 +65,7 @@ public class Level extends TiledMapLevel<GameScreen> {
 		player.tick(deltaTime);
 		camera.follow(player.getPosition());
 		dialogs.tick(deltaTime);
+		collisionHandler.checkForCollision(hardBlocks);
 	}
 
 	@Override

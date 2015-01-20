@@ -2,7 +2,7 @@
 <GDXTensions-level-dialogs>
 	<level-dialogs>
 	    <!-- Each level-dialog element needs the key attribute for you to know in what situation you want it -->
- 		<level-dialog key="meet-hero-one" pos="600,200"> 
+ 		<level-dialog key="meet-hero-one" pos="400,200"> 
  		    <!-- You may also add a position attribute to the parent, if so then 
  		    	 all the children will have that position unless you give them one, 
  		    	 if so it will override the parents position -->
@@ -10,15 +10,15 @@
 		   	    This is an example of what a character named Hero One would say, notice there is no line break in the xml, the program handles that for you!
 	       	</dialog>
 		
-<!-- 	  	    <dialog pos="300,150"> -->
-<!-- 	  	        Notice here that no name attribute is required, here the position will also be overriden -->
-<!-- 	  	    </dialog> -->
+	  	    <dialog pos="300,150">
+	  	        Notice here that no name attribute is required, here the position will also be overriden
+	  	    </dialog>
 	  	    
-<!-- 	  	    <dialog header="Hero Two" time="3"> -->
-<!-- 	       		This dialog from Hero Two will expire within 3 seconds -->
-<!-- 	       	</dialog> -->
+	  	    <dialog header="Hero Two" time="3">
+	       		This dialog from Hero Two will expire within 3 seconds
+	       	</dialog>
 	       	
-	  	    <dialog header="Second Encounter" secondary="true">
+	  	    <dialog header="Second Encounter" secondary="true" pos="400,100">
 	  	        This is what would happen if the hero interacts again, this dialog can be opened and closed several times
 	  	    </dialog>
 	    </level-dialog>
