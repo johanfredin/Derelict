@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32" nextobjectid="20">
  <tileset firstgid="1" name="foreground" tilewidth="32" tileheight="32">
   <image source="../../sprites/tilesets/TileC (2).png" width="512" height="512"/>
  </tileset>
  <tileset firstgid="257" name="background" tilewidth="32" tileheight="32">
   <image source="../../sprites/tilesets/TileA5.png" width="256" height="512"/>
  </tileset>
+ <objectgroup name="objects-32px">
+  <object id="1" name="spawn" x="96" y="192" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup color="#a42309" name="hard-blocks">
+  <object id="7" x="608" y="0" width="32" height="640"/>
+  <object id="8" x="608" y="608" height="8"/>
+  <object id="9" x="0" y="608" width="608" height="32"/>
+  <object id="10" x="0" y="0" width="32" height="608"/>
+  <object id="11" x="32" y="0" width="576" height="32"/>
+ </objectgroup>
+ <objectgroup color="#0000ff" name="soft-blocks">
+  <object id="12" x="96" y="224" width="384" height="32"/>
+  <object id="14" x="128" y="448" width="224" height="32"/>
+  <object id="15" x="288" y="384" width="128" height="32"/>
+  <object id="16" x="352" y="544" width="32" height="32"/>
+  <object id="17" x="448" y="544" width="160" height="32"/>
+  <object id="18" x="32" y="544" width="288" height="32"/>
+  <object id="19" x="128" y="480" width="96" height="32"/>
+ </objectgroup>
  <layer name="background" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjZmRgYB7FVMVsWPjIGJ9aepkHwoxYzEI3k1TzCGFquQ+X/0fNo6152MxET5OUmocuhs0MYtIaeroj1n2jmHgMAI5GBy0=
+   eJxjZmRgYKYyphYYNW9wm8fKSBqmt/tGzYMAQvFAT/cxMeLGlJpHDfdRAmDm4fMjsluR3YxNDa3cR00MAGe2Adw=
   </data>
  </layer>
  <layer name="foreground" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJztzrsOAVEURuGJy1C71+61+zPiCfAEqBHUiAgdKjqm4hWsQjHFYXZyTkbjT75MsU9WxrL8mY0IooZ6KaSRUdwCCCKEsLBXRAllxS2GOBJICnsNNNFS3LLIIY+CsPdtFVRRQ91A7xfb42Cwd8FV8G6CKWYe7x54fri10UEXK6yxkf2mcj30McARJ5w1ekOMMMYNdzgavTkWWGo03Nu+vztDvf/82wtWixtS
+   eJxjYBgFo2AUjIJRMApIBwAGQAAB
   </data>
  </layer>
- <objectgroup name="objects-32px">
-  <object name="spawn" x="240" y="432"/>
- </objectgroup>
- <objectgroup color="#a42309" name="collision">
-  <object x="192" y="96" width="96" height="72"/>
-  <object x="416" y="128" width="128" height="72"/>
-  <object x="392" y="352" width="80" height="72"/>
-  <object x="328" y="416" width="24" height="40"/>
-  <object x="88" y="320" width="24" height="32"/>
-  <object x="608" y="0" width="32" height="640"/>
-  <object x="608" y="608" height="8"/>
-  <object x="0" y="608" width="608" height="32"/>
-  <object x="0" y="0" width="32" height="608"/>
-  <object x="32" y="0" width="576" height="32"/>
- </objectgroup>
  <layer name="main" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJzLZmBgyGZgaKASBplFNTBqHgK4AbE7EHtQyTx8wAmInYHYBYhdqWAeLjCSzfsHxP+paB41ADnmfQPi70D8g0LzThOhZjD4dxiYt4CKmAEAGJs8NQ==
+   eJxjYBgFo2AUjIJRMApIBwAGQAAB
   </data>
  </layer>
 </map>

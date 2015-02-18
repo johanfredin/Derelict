@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -27,29 +26,23 @@ public class Level extends TiledMapLevel<GameScreen> {
 	private TiledMapTileLayer backgroundLayer;
 	private TiledMapTileLayer foregroundLayer;
 	private TiledMapTileLayer mainLayer;
-	private Player player;
 	private Array<Rectangle> hardBlocks;
+	private Player player;
 	private Dialogs dialogs;
 	
 	public Level(String levelName, GameScreen gameScreen) {
 		super(levelName, gameScreen);
-		this.backgroundLayer = (TiledMapTileLayer) map.getLayers().get("background");
-		this.foregroundLayer = (TiledMapTileLayer) map.getLayers().get("foreground");
-		this.mainLayer = (TiledMapTileLayer) map.getLayers().get("main");
+		this.backgroundLayer = getLayer("background");
+		this.foregroundLayer = getLayer("foreground");
+		this.mainLayer = getLayer("main");
 		
-		MapObject spawnObject = map.getLayers().get("objects-32px").getObjects().get("spawn");
-		float spawnX = spawnObject.getProperties().get("x", Float.class);
-		float spawnY = spawnObject.getProperties().get("y", Float.class);
-		Vector2 spawnPoint = new Vector2(spawnX, spawnY);
+		MapObject spawnObject = getMapObject("objects-32px", "spawn");
+		Vector2 spawnPoint = getVector2(spawnObject, "x", "y");
 		
 		this.player = new Player(spawnPoint, baseInput);
-		this.hardBlocks = new Array<Rectangle>();
-		Array<RectangleMapObject> blockObjects = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
-		for(RectangleMapObject rectangleMapObject : blockObjects) {
-			hardBlocks.add(rectangleMapObject.getRectangle());
-		}
+		this.hardBlocks = getRectangularMapObjects("hard-blocks");
 		this.shapeRendererPlus = new ShapeRendererPlus(camera, ShapeType.Line);
-//		this.camera.setBounds(mapWidth, mapHeight);
+		this.camera.setBounds(mapWidth, mapHeight);
 		DialogXMLParser dialogXMLParser = new DialogXMLParser("dialogs/example.xml");
 		this.dialogs = new Dialogs(baseInput, dialogXMLParser.getXMLDialog("meet-hero-one"), Loader.PACKFILES_PATH + "dialog.pack", Loader.FONT_PATH + "font.fnt", Color.RED);
 		
@@ -94,7 +87,10 @@ public class Level extends TiledMapLevel<GameScreen> {
 		mapRenderer.dispose();
 	}
 	
-
+	public Player getPlayer() {
+		return player;
+	}
+	
 	@Override
 	public void switchLevel() {
 	}
