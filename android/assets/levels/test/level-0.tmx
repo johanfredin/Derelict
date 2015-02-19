@@ -7,7 +7,7 @@
   <image source="../../sprites/tilesets/TileA5.png" width="256" height="512"/>
  </tileset>
  <objectgroup name="objects-32px">
-  <object id="1" name="spawn" x="96" y="192" width="32" height="32"/>
+  <object id="1" name="spawn" x="480" y="96" width="32" height="32"/>
  </objectgroup>
  <objectgroup color="#a42309" name="hard-blocks">
   <object id="7" x="608" y="0" width="32" height="640"/>
