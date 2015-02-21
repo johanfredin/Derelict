@@ -14,6 +14,9 @@ import com.badlogic.gdx.graphics.GL20;
  */
 public class Derelict extends Game {
 	
+	/** If true we will use the levels from our test directory */
+	public static final boolean USE_TEST_LEVELS = false;
+	
 	/** This is the resolution limit (width * height) for deciding if device is low end or not */
 	private static final int LOW_END_LIMIT = 480 * 320;
 	
@@ -22,9 +25,6 @@ public class Derelict extends Game {
 	
 	/** Renders the bounding boxes but wont let us fly */
 	public static boolean SHOULD_RENDER_BOUNDING_BOXES = false;
-	
-	/** If true we will use the levels from our test directory */
-	public static final boolean USE_TEST_LEVELS = false;
 	
 	/** Makes the cow invincible */
 	public static boolean GOD_MODE = true;

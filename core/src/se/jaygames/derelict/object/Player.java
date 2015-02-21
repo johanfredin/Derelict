@@ -5,7 +5,6 @@ import se.fredin.gdxtensions.collision.CollisionHandler;
 import se.fredin.gdxtensions.collision.CollisionHandler.Filter;
 import se.fredin.gdxtensions.input.BaseInput;
 import se.fredin.gdxtensions.object.GameObject;
-import se.fredin.gdxtensions.scene2d.dialog.Dialog;
 import se.fredin.gdxtensions.utils.AnimationUtils;
 import se.jaygames.derelict.Derelict;
 
@@ -25,7 +24,7 @@ public class Player extends GameObject {
 
 	public static final byte MAX_HEALTH = 100;
 	
-	private final byte DEFAULT_SPEED = 4;
+	private final float DEFAULT_SPEED = 150f * GAMESPEED;
 	private final float ANIM_SPEED_NORMAL = 0.10f;
 
 	private TextureRegion currentFrame;
@@ -38,7 +37,7 @@ public class Player extends GameObject {
 	private boolean isDead;
 	private boolean isCollidingWithWall;
 	private boolean isVisible;
-	private boolean isAbleToWallJump;
+	private boolean isAbleToWallJump = true;
 	private boolean isTeleported;
 	
 	private Vector2 teleportLandingPosition;
@@ -59,14 +58,25 @@ public class Player extends GameObject {
 	public Player(Vector2 position, BaseInput input, CollisionHandler collisionHandler) {
 		super(position, collisionHandler, 32, 32);
 		this.speed = DEFAULT_SPEED;
+		
+		this.health = MAX_HEALTH;
+		
+		// Start with not moving
+		this.direction = DIRECTION_NONE;
+		
 		this.input = input;
 		TextureRegion heroSpriteSheet = new TextureRegion((Texture) Assets.getInstance().get("sprites/objects/test/hero.png"));
 		this.leftWalk = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, "0-11");
 		this.rightWalk = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, 6,7,8);
+		
+		// Don't have animations for these yet, going with walking copies for now .......................................
 		this.rightJump = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, 9,10,11);
 		this.leftJump = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, "0-2");
+		this.rightFall = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, 9,10,11);
+		this.leftFall = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, "0-2");
 		this.rightHurt = AnimationUtils.getAnimation(heroSpriteSheet, 0, 32, 32, false, false, 0);
 		this.leftHurt = AnimationUtils.getAnimation(heroSpriteSheet, 0, 32, 32, true, false, 0);
+		// ..............................................................................................................
 		this.currentFrame = rightWalk.getKeyFrame(stateTime, false);
 		this.speed = DEFAULT_SPEED;
 		this.velocity.set(1.0f, 0.0f);
@@ -222,18 +232,11 @@ public class Player extends GameObject {
 
 		// Check if the cow is hurt and update health
 		updateHealth(deltatime);
-
+		handleInput();
 		animate(deltatime);
 
-		boolean isTouched = Dialog.canJump && !isGoalReached; // if its not time to tap you will jump
-		if (!isTouched) {
-			down = false;
-		} else if (isTouched && direction == DIRECTION_NONE) {
-			// So that cow stands still before tapping at beginning of level
-			direction = DIRECTION_RIGHT;
-			gravity = 0;
-		}
-
+		boolean isTouched = input.isJumpButtonPressed();
+		
 		/*
 		 * Jump and falling logic
 		 */
@@ -247,26 +250,19 @@ public class Player extends GameObject {
 			}
 		}
 
-		System.out.println(tempvelocity);
-		
+	
 		if (onGround) {
 			isJumping = false;
-			if (isTouched && !down) {
+			if (isTouched) {
 				// Jump!
-				down = true;
 				isJumping = true;
 				gravity = -JUMP;
 			}
 			
 			if (!isJumping) {
 				gravity = 0;
-			}
-		}
-
-		// If touch is released its time to fall (if we are jumping)
-		if (!isTouched && isJumping) {
-			down = isJumping == false? true : false;
-			gravity = 0;
+			} 
+			
 		}
 
 		/*
@@ -279,7 +275,7 @@ public class Player extends GameObject {
 		} else if (isHeadingRight() && !isGoalReached) {
 			velocity.set(deltatime * -this.speed, deltatime * (gravity + tempvelocity / 2.0f));
 		} else if (direction == DIRECTION_NONE && !isTouched || isGoalReached) {
-			velocity.set(deltatime * 0.0f, deltatime * (gravity + tempvelocity / 2.0f));
+			velocity.set(0.0f, deltatime * (gravity + tempvelocity / 2.0f));
 		}
 		
 		if (isTeleported) {
@@ -309,6 +305,21 @@ public class Player extends GameObject {
 		//TODO:Just to kill player while testing
 		if(Gdx.input.isKeyPressed(Keys.BACKSPACE)) {
 			kill();
+		}
+		
+	}
+	
+	private void handleInput() {
+		if(input.isLeftButtonPressed()) {
+			System.out.println("left btn pressed");
+			direction = DIRECTION_LEFT;
+		} if(input.isRightButtonPressed()) {
+			System.out.println("right btn pressed");
+			direction = DIRECTION_RIGHT;
+		} else {
+			if(input.noMovementKeysPressed()) {
+				direction = DIRECTION_NONE;
+			}
 		}
 	}
 
@@ -388,8 +399,7 @@ public class Player extends GameObject {
 	 * player is in the air and colliding with a hard wall.
 	 */
 	private void checkIfTimeForWallJump() {
-		if (isAbleToWallJump && Gdx.input.justTouched() && !down) {
-			down = true;
+		if (isAbleToWallJump && input.isJumpButtonPressed()) {
 			isJumping = true;
 			gravity = -JUMP;
 			switchXDirection();
