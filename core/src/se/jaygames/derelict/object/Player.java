@@ -6,7 +6,7 @@ import se.fredin.gdxtensions.collision.CollisionHandler.Filter;
 import se.fredin.gdxtensions.input.BaseInput;
 import se.fredin.gdxtensions.object.GameObject;
 import se.fredin.gdxtensions.utils.AnimationUtils;
-import se.jaygames.derelict.Derelict;
+import se.fredin.gdxtensions.utils.Settings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -24,7 +24,7 @@ public class Player extends GameObject {
 
 	public static final byte MAX_HEALTH = 100;
 	
-	private final float DEFAULT_SPEED = 150f * GAMESPEED;
+	private final float DEFAULT_SPEED = 150f * Settings.GAMESPEED;
 	private final float ANIM_SPEED_NORMAL = 0.10f;
 
 	private TextureRegion currentFrame;
@@ -225,7 +225,7 @@ public class Player extends GameObject {
 	@Override
 	public void tick(float deltatime, GameObject player) {
 		// Enter debug ticking mode if that is enabled
-		if (Derelict.FREE_FLYING_MODE) {
+		if (Settings.FREE_FLYING_MODE) {
 			debugTick(deltatime);
 			return;
 		}
