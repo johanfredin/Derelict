@@ -4,7 +4,7 @@ import se.fredin.gdxtensions.assetmanagement.Assets;
 import se.fredin.gdxtensions.collision.CollisionHandler;
 import se.fredin.gdxtensions.collision.CollisionHandler.Filter;
 import se.fredin.gdxtensions.input.BaseInput;
-import se.fredin.gdxtensions.object.GameObject;
+import se.fredin.gdxtensions.object.RichGameObject;
 import se.fredin.gdxtensions.utils.AnimationUtils;
 import se.fredin.gdxtensions.utils.Settings;
 
@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player extends GameObject {
+public class Player extends RichGameObject {
 
 	public static final byte MAX_HEALTH = 100;
 	
@@ -223,7 +223,7 @@ public class Player extends GameObject {
 	}
 
 	@Override
-	public void tick(float deltatime, GameObject player) {
+	public void tick(float deltatime, RichGameObject player) {
 		// Enter debug ticking mode if that is enabled
 		if (Settings.FREE_FLYING_MODE) {
 			debugTick(deltatime);
