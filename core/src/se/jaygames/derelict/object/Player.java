@@ -5,12 +5,14 @@ import se.fredin.gdxtensions.collision.CollisionHandler;
 import se.fredin.gdxtensions.collision.CollisionHandler.Filter;
 import se.fredin.gdxtensions.input.BaseInput;
 import se.fredin.gdxtensions.object.RichGameObject;
+import se.fredin.gdxtensions.object.projectile.Projectile;
+import se.fredin.gdxtensions.object.projectile.Projectiles;
 import se.fredin.gdxtensions.utils.AnimationUtils;
 import se.fredin.gdxtensions.utils.Settings;
+import se.jaygames.derelict.utils.Loader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -22,25 +24,18 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Player extends RichGameObject {
 
-	public static final byte MAX_HEALTH = 100;
-	
 	private final float DEFAULT_SPEED = 150f * Settings.GAMESPEED;
 	private final float ANIM_SPEED_NORMAL = 0.10f;
 
 	private TextureRegion currentFrame;
 	private Sprite playerSprite;
-	private float health;
 	private float tempvelocity;
 	private float healthColorPulseTimer;
 
 	private boolean isGoalReached;
 	private boolean isDead;
 	private boolean isCollidingWithWall;
-	private boolean isVisible;
 	private boolean isAbleToWallJump = true;
-	private boolean isTeleported;
-	
-	private Vector2 teleportLandingPosition;
 	
 	/** Check if we fell of a ledge */
 	private boolean deathFromFalling;
@@ -51,9 +46,7 @@ public class Player extends RichGameObject {
 	private Animation rightHurt, leftHurt;
 
 	private Color playerColor;
-	
-	//TODO: For now only fixed keyboard, fix later to map to any keys or gamepad or touchpad
-	private BaseInput input;
+	private Projectiles projectiles;
 	
 	public Player(Vector2 position, BaseInput input, CollisionHandler collisionHandler) {
 		super(position, collisionHandler, 32, 32);
@@ -83,8 +76,11 @@ public class Player extends RichGameObject {
 		this.currentFrame = rightWalk.getKeyFrame(0);
 		this.playerSprite = new Sprite(currentFrame);
 		this.playerColor = new Color(Color.WHITE);
-		this.isTeleported = false;
 		this.isVisible = true;
+		
+		Projectile template = new Projectile(position);
+		template.setGameObjectTexture(Loader.TEST_PATH + "bullet.png");
+		this.projectiles = new Projectiles(template, 10, Integer.MAX_VALUE);
 	}
 
 	/**
@@ -130,6 +126,8 @@ public class Player extends RichGameObject {
 			// We only draw the player if it should be visible
 			playerSprite.setColor(isDead ? Color.LIGHT_GRAY : playerColor);
 			playerSprite.draw(batch);
+			
+			projectiles.render(batch);
 		}
 	}
 
@@ -174,48 +172,11 @@ public class Player extends RichGameObject {
 		return currentFrame == null ? 32 : currentFrame.getRegionHeight();
 	}
 
-	/**
-	 * Set the player to visible or not
-	 * @param isVisible
-	 */
-	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
-	}
-
-	/**
-	 * Check if the player is visible
-	 * @return
-	 */
-	public boolean isVisible() {
-		return isVisible;
-	}
-
 	/** 
 	 * Used to set the players speed back to its regular speed 
 	 */
 	public void resetToDefaultSpeed() {
 		this.speed = DEFAULT_SPEED;
-	}
-
-	/**
-	 * Adds health to the player
-	 * @param amount the amount of health to add
-	 */
-	public void increaseHealth(float amount) {
-		if(health < MAX_HEALTH) {
-			this.health += amount;
-		}
-	}
-
-	public float getHealth() {
-		return health;
-	}
-
-	/**
-	 * Sets the players health to zero
-	 */
-	public void kill() {
-		this.health = 0.0f;
 	}
 
 	public float getBoundsY() {
@@ -278,12 +239,6 @@ public class Player extends RichGameObject {
 			velocity.set(0.0f, deltatime * (gravity + tempvelocity / 2.0f));
 		}
 		
-		if (isTeleported) {
-			if (getPosition().dst(getTeleportLandingPosition()) > 32f) {
-				isTeleported = false;
-			}
-		}
-
 		/*
 		 * Try to move the player with the new velocity
 		 */
@@ -307,14 +262,17 @@ public class Player extends RichGameObject {
 			kill();
 		}
 		
+		projectiles.tick(deltatime, null);
+		
 	}
 	
-	private void handleInput() {
-		if(input.isLeftButtonPressed()) {
-			System.out.println("left btn pressed");
+	@Override
+	public void handleInput() {
+		if(input.isShootButtonPressed()) {
+			projectiles.shoot();
+		} if(input.isLeftButtonPressed()) {
 			direction = DIRECTION_LEFT;
 		} if(input.isRightButtonPressed()) {
-			System.out.println("right btn pressed");
 			direction = DIRECTION_RIGHT;
 		} else {
 			if(input.noMovementKeysPressed()) {
@@ -480,28 +438,5 @@ public class Player extends RichGameObject {
 	public void dispose() {
 	}
 
-	public void setOnGround(boolean onGround) {
-		this.onGround = onGround;
-	}
-
-	public boolean isTeleported() {
-		return isTeleported;
-	}
-
-	public void setTeleported(boolean isTeleported) {
-		this.isTeleported = isTeleported;
-	}
-
-	public Vector2 getTeleportLandingPosition() {
-		return teleportLandingPosition;
-	}
-
-	public void setTeleportLandingPosition(Vector2 teleportLandingPosition) {
-		this.teleportLandingPosition = teleportLandingPosition;
-	}
 	
-	public InputProcessor getInput() {
-		return input;
-	}
-
 }

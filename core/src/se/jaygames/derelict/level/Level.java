@@ -1,6 +1,5 @@
 package se.jaygames.derelict.level;
 
-
 import se.fredin.gdxtensions.collision.CollisionHandler;
 import se.fredin.gdxtensions.level.TiledMapLevel;
 import se.fredin.gdxtensions.screen.ingame.Dialogs;
