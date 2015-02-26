@@ -78,9 +78,8 @@ public class Player extends RichGameObject {
 		this.playerColor = new Color(Color.WHITE);
 		this.isVisible = true;
 		
-		Projectile template = new Projectile(position);
-		template.setGameObjectTexture(Loader.TEST_PATH + "bullet.png");
-		this.projectiles = new Projectiles(template, 10, Integer.MAX_VALUE);
+		this.gameObjectTexture = new TextureRegion((Texture) Assets.getInstance().get(Loader.TEST_PATH + "bullet.png"));
+		this.projectiles = new Projectiles(10, Integer.MAX_VALUE);
 	}
 
 	/**
@@ -269,7 +268,7 @@ public class Player extends RichGameObject {
 	@Override
 	public void handleInput() {
 		if(input.isShootButtonPressed()) {
-			projectiles.shoot();
+			shoot();
 		} if(input.isLeftButtonPressed()) {
 			direction = DIRECTION_LEFT;
 		} if(input.isRightButtonPressed()) {
@@ -279,6 +278,17 @@ public class Player extends RichGameObject {
 				direction = DIRECTION_NONE;
 			}
 		}
+	}
+	
+	private void shoot() {
+		Vector2 bulletPos = new Vector2(position.x + bounds.width / 2, position.y + bounds.height / 2);
+		Projectile bullet = new Projectile(bulletPos, collisionHandler, 10f, 10f, 5f, gameObjectTexture);
+		float bulletSpeed = Settings.defaultProjectileSpeed;
+		if(isHeadingLeft()) {
+			bulletSpeed = -Settings.defaultProjectileSpeed;
+		}
+		bullet.setVelocity(bulletSpeed, 0);
+		projectiles.shoot(bullet);
 	}
 
 	@Override
