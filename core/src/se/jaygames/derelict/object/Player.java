@@ -13,10 +13,8 @@ import se.jaygames.derelict.utils.Loader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -27,10 +25,7 @@ public class Player extends RichGameObject {
 	private final float DEFAULT_SPEED = 150f * Settings.GAMESPEED;
 	private final float ANIM_SPEED_NORMAL = 0.10f;
 
-	private TextureRegion currentFrame;
-	private Sprite playerSprite;
 	private float tempvelocity;
-	private float healthColorPulseTimer;
 
 	private boolean isGoalReached;
 	private boolean isDead;
@@ -45,8 +40,8 @@ public class Player extends RichGameObject {
 	private Animation leftFall, rightFall;
 	private Animation rightHurt, leftHurt;
 
-	private Color playerColor;
 	private Projectiles projectiles;
+	private TextureRegion bulletTexture;
 	
 	public Player(Vector2 position, BaseInput input, CollisionHandler collisionHandler) {
 		super(position, collisionHandler, 32, 32);
@@ -70,16 +65,13 @@ public class Player extends RichGameObject {
 		this.rightHurt = AnimationUtils.getAnimation(heroSpriteSheet, 0, 32, 32, false, false, 0);
 		this.leftHurt = AnimationUtils.getAnimation(heroSpriteSheet, 0, 32, 32, true, false, 0);
 		// ..............................................................................................................
-		this.currentFrame = rightWalk.getKeyFrame(stateTime, false);
+		this.gameObjectTexture = rightWalk.getKeyFrame(stateTime, false);
 		this.speed = DEFAULT_SPEED;
 		this.velocity.set(1.0f, 0.0f);
-		this.currentFrame = rightWalk.getKeyFrame(0);
-		this.playerSprite = new Sprite(currentFrame);
-		this.playerColor = new Color(Color.WHITE);
 		this.isVisible = true;
 		
-		this.gameObjectTexture = new TextureRegion((Texture) Assets.getInstance().get(Loader.TEST_PATH + "bullet.png"));
-		this.projectiles = new Projectiles(10, Integer.MAX_VALUE);
+		this.bulletTexture = new TextureRegion((Texture) Assets.getInstance().get(Loader.TEST_PATH + "bullet.png"));
+		this.projectiles = new Projectiles(10, 160, .1f, input);
 	}
 
 	/**
@@ -123,10 +115,8 @@ public class Player extends RichGameObject {
 	public void render(SpriteBatch batch) {
 		if (isVisible) {
 			// We only draw the player if it should be visible
-			playerSprite.setColor(isDead ? Color.LIGHT_GRAY : playerColor);
-			playerSprite.draw(batch);
-			
 			projectiles.render(batch);
+			batch.draw(gameObjectTexture, position.x, position.y);
 		}
 	}
 
@@ -153,22 +143,6 @@ public class Player extends RichGameObject {
 	 */
 	public boolean isNotMoving() {
 		return isCollidingWithWall || speed == 0.0f;
-	}
-
-	/**
-	 * Get the width of the current frame texture region
-	 * @return width
-	 */
-	public int getTextureWidth() {
-		return currentFrame == null ? 32 : currentFrame.getRegionWidth();
-	}
-
-	/**
-	 * Get the height of the current frame texture region
-	 * @return height
-	 */
-	public int getTextureHeight() {
-		return currentFrame == null ? 32 : currentFrame.getRegionHeight();
 	}
 
 	/** 
@@ -243,7 +217,6 @@ public class Player extends RichGameObject {
 		 */
 		Vector2 newPosition = new Vector2(0, 0);
 		newPosition.add(this.position);
-		playerSprite.setPosition(position.x, position.y);
 
 		// Update the players position if we haven't died
 		if(!isDead && !isGoalReached) {
@@ -267,25 +240,18 @@ public class Player extends RichGameObject {
 	
 	@Override
 	public void handleInput() {
+		super.handleInput(); 
 		if(input.isShootButtonPressed()) {
 			shoot();
-		} if(input.isLeftButtonPressed()) {
-			direction = DIRECTION_LEFT;
-		} if(input.isRightButtonPressed()) {
-			direction = DIRECTION_RIGHT;
-		} else {
-			if(input.noMovementKeysPressed()) {
-				direction = DIRECTION_NONE;
-			}
 		}
 	}
 	
 	private void shoot() {
 		Vector2 bulletPos = new Vector2(position.x + bounds.width / 2, position.y + bounds.height / 2);
-		Projectile bullet = new Projectile(bulletPos, collisionHandler, 10f, 10f, 5f, gameObjectTexture);
-		float bulletSpeed = Settings.defaultProjectileSpeed;
+		Projectile bullet = new Projectile(bulletPos, collisionHandler, 10f, 10f, 5f, bulletTexture);
+		float bulletSpeed = 800f;
 		if(isHeadingLeft()) {
-			bulletSpeed = -Settings.defaultProjectileSpeed;
+			bulletSpeed = -bulletSpeed;
 		}
 		bullet.setVelocity(bulletSpeed, 0);
 		projectiles.shoot(bullet);
@@ -331,35 +297,34 @@ public class Player extends RichGameObject {
 		super.animate(deltaTime);
 		if(speed != 0.0f) {
 			if (direction == DIRECTION_NONE) {
-				currentFrame = rightWalk.getKeyFrame(stateTime, true);
+				gameObjectTexture = rightWalk.getKeyFrame(stateTime, true);
 			} else if (direction == DIRECTION_RIGHT) {
 				if ((isJumping() && !isDead) || gravity < 0) {
-					currentFrame = rightJump.getKeyFrame(stateTime, false);
+					gameObjectTexture = rightJump.getKeyFrame(stateTime, false);
 				} else if (isFalling() && !isDead) {
-					currentFrame = rightFall.getKeyFrame(stateTime, true);
+					gameObjectTexture = rightFall.getKeyFrame(stateTime, true);
 				} else if (isDead) {
-					currentFrame = rightHurt.getKeyFrame(stateTime, false);
+					gameObjectTexture = rightHurt.getKeyFrame(stateTime, false);
 				} else if (isGoalReached) {
-					currentFrame = rightWalk.getKeyFrame(0, false);
+					gameObjectTexture = rightWalk.getKeyFrame(0, false);
 				} else {
-					currentFrame = rightWalk.getKeyFrame(stateTime, true);
+					gameObjectTexture = rightWalk.getKeyFrame(stateTime, true);
 				}
 			} else if (direction == DIRECTION_LEFT) {
 				if ((isJumping() && !isDead) || gravity < 0) {
-					currentFrame = leftJump.getKeyFrame(stateTime, false);
+					gameObjectTexture = leftJump.getKeyFrame(stateTime, false);
 				} else if (isFalling() && !isDead) {
-					currentFrame = leftFall.getKeyFrame(stateTime, true);
+					gameObjectTexture = leftFall.getKeyFrame(stateTime, true);
 				} else if (isDead) {
-					currentFrame = leftHurt.getKeyFrame(stateTime, false);
+					gameObjectTexture = leftHurt.getKeyFrame(stateTime, false);
 				} else if (isGoalReached) {
-					currentFrame = leftWalk.getKeyFrame(0, false);
+					gameObjectTexture = leftWalk.getKeyFrame(0, false);
 				} else {
-					currentFrame = leftWalk.getKeyFrame(stateTime, true);
+					gameObjectTexture = leftWalk.getKeyFrame(stateTime, true);
 				}
 			}
 		} 
 
-		playerSprite.setRegion(currentFrame);
 	}
 
 	/**
@@ -386,30 +351,8 @@ public class Player extends RichGameObject {
 			if (position.y + getTextureHeight() <= 0) {
 				deathFromFalling = true;
 			}
-			currentFrame = isHeadingRight() ? rightHurt.getKeyFrame(0) : leftHurt.getKeyFrame(0);
+			gameObjectTexture = isHeadingRight() ? rightHurt.getKeyFrame(0) : leftHurt.getKeyFrame(0);
 			return;
-		}
-
-		// If we are down to 25% health we start pulsating the with a red color
-		if(health < MAX_HEALTH / 4) {
-			float green = 1;
-			float blue = 1;
-
-			healthColorPulseTimer += deltatime;
-			if(healthColorPulseTimer < .5f) {
-				green = Math.min(0.0f, -healthColorPulseTimer * 2f);
-				blue = Math.min(0.0f, -healthColorPulseTimer * 2f);
-				playerColor.lerp(1.0f, green, blue, 1.0f, deltatime);
-			} else if(healthColorPulseTimer >= .5f && healthColorPulseTimer <= 1.0f) {
-				green = Math.min(1.0f, healthColorPulseTimer * 2f);
-				blue =  Math.min(1.0f, healthColorPulseTimer * 2f);
-				playerColor.lerp(1.0f, green, blue, 1.0f, deltatime);
-			} else {
-				healthColorPulseTimer = 0.0f;
-			}
-		} else {
-			playerColor.set(1, 1, 1, 1);
-			healthColorPulseTimer = 0.0f;
 		}
 
 		if (health >= MAX_HEALTH) {
