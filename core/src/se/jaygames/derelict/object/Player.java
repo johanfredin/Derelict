@@ -24,7 +24,16 @@ public class Player extends RichGameObject {
 
 	private final float DEFAULT_SPEED = 150f * Settings.GAMESPEED;
 	private final float ANIM_SPEED_NORMAL = 0.10f;
-
+	private final byte AIM_LEFT 		= 0;
+	private final byte AIM_UP_LEFT 		= 1;
+	private final byte AIM_UP 			= 2;
+	private final byte AIM_UP_RIGHT 	= 4;
+	private final byte AIM_RIGHT 		= 8;
+	private final byte AIM_DOWN_RIGHT 	= 16;
+	private final byte AIM_DOWN 		= 32;
+	private final byte AIM_DOWN_LEFT 	= 64;
+	
+	private byte currentAim;
 	private float tempvelocity;
 
 	private boolean isGoalReached;
@@ -54,16 +63,16 @@ public class Player extends RichGameObject {
 		
 		this.input = input;
 		TextureRegion heroSpriteSheet = new TextureRegion((Texture) Assets.getInstance().get("sprites/objects/test/hero.png"));
-		this.leftWalk = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, "0-11");
+		this.leftWalk = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, 3,4,5);
 		this.rightWalk = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, 6,7,8);
 		
 		// Don't have animations for these yet, going with walking copies for now .......................................
-		this.rightJump = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, 9,10,11);
-		this.leftJump = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, "0-2");
-		this.rightFall = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, 9,10,11);
-		this.leftFall = AnimationUtils.getAnimation(heroSpriteSheet, ANIM_SPEED_NORMAL, 32, 32, false, false, "0-2");
-		this.rightHurt = AnimationUtils.getAnimation(heroSpriteSheet, 0, 32, 32, false, false, 0);
-		this.leftHurt = AnimationUtils.getAnimation(heroSpriteSheet, 0, 32, 32, true, false, 0);
+		this.rightJump = rightWalk;
+		this.leftJump = leftWalk;
+		this.rightFall = rightWalk;
+		this.leftFall = leftWalk;
+		this.rightHurt = rightWalk;
+		this.leftHurt = leftWalk;
 		// ..............................................................................................................
 		this.gameObjectTexture = rightWalk.getKeyFrame(stateTime, false);
 		this.speed = DEFAULT_SPEED;
@@ -169,7 +178,7 @@ public class Player extends RichGameObject {
 		handleInput();
 		animate(deltatime);
 
-		boolean isTouched = input.isJumpButtonPressed();
+		boolean isJumpButtonPressed = input.isJumpButtonPressed();
 		
 		/*
 		 * Jump and falling logic
@@ -187,7 +196,7 @@ public class Player extends RichGameObject {
 	
 		if (onGround) {
 			isJumping = false;
-			if (isTouched) {
+			if (isJumpButtonPressed) {
 				// Jump!
 				isJumping = true;
 				gravity = -JUMP;
@@ -208,7 +217,7 @@ public class Player extends RichGameObject {
 			velocity.set(deltatime * this.speed, deltatime * (gravity + tempvelocity / 2.0f));
 		} else if (isHeadingRight() && !isGoalReached) {
 			velocity.set(deltatime * -this.speed, deltatime * (gravity + tempvelocity / 2.0f));
-		} else if (direction == DIRECTION_NONE && !isTouched || isGoalReached) {
+		} else if (direction == DIRECTION_NONE && !isJumpButtonPressed || isGoalReached) {
 			velocity.set(0.0f, deltatime * (gravity + tempvelocity / 2.0f));
 		}
 		
@@ -240,20 +249,88 @@ public class Player extends RichGameObject {
 	
 	@Override
 	public void handleInput() {
-		super.handleInput(); 
+		if(input.isLeftButtonPressed()) {
+			direction = DIRECTION_LEFT;
+			lastKnownDirection = direction;
+			currentAim = AIM_LEFT;
+		} if(input.isRightButtonPressed()) {
+			direction = DIRECTION_RIGHT;
+			lastKnownDirection = direction;
+			currentAim = AIM_RIGHT;
+		} 
+		
+		 if(input.isUpLeftButtonPressed()) {
+			currentAim = AIM_UP_LEFT;
+		} if(input.isUpButtonPressed()) {
+			currentAim = AIM_UP;
+		} if(input.isUpRightButtonPressed()) {
+			currentAim = AIM_UP_RIGHT;
+		} if(input.isDownRightButtonPressed()) {
+			currentAim = AIM_DOWN_RIGHT;
+		} if(input.isDownButtonPressed()) {
+			currentAim = AIM_DOWN;
+		} if(input.isDownLeftButtonPressed()) {
+			currentAim = AIM_DOWN_LEFT;
+		} 
+		
+		
+		
 		if(input.isShootButtonPressed()) {
 			shoot();
+		} 
+		
+		if(input.noMovementKeysPressed()) {
+			direction = DIRECTION_NONE;
+			currentAim = lastKnownDirection;
 		}
 	}
 	
 	private void shoot() {
 		Vector2 bulletPos = new Vector2(position.x + bounds.width / 2, position.y + bounds.height / 2);
 		Projectile bullet = new Projectile(bulletPos, collisionHandler, 10f, 10f, 5f, bulletTexture);
-		float bulletSpeed = 800f;
-		if(isHeadingLeft()) {
-			bulletSpeed = -bulletSpeed;
-		}
-		bullet.setVelocity(bulletSpeed, 0);
+		float straightHeadingSpeed = 800;
+		float angularHeadingSpeed = straightHeadingSpeed / 2f;
+		float xSpeed = 0;
+		float ySpeed = 0;
+		switch(currentAim) {
+		case AIM_LEFT:
+			xSpeed = -straightHeadingSpeed;
+			ySpeed = 0;
+			break;
+		case AIM_UP_LEFT:
+			xSpeed = -angularHeadingSpeed;
+			ySpeed = angularHeadingSpeed;
+			break;
+		case AIM_UP:
+			xSpeed = 0;
+			ySpeed = straightHeadingSpeed;
+			break;
+		case AIM_UP_RIGHT:
+			xSpeed = angularHeadingSpeed;
+			ySpeed = angularHeadingSpeed;
+			break;
+		case AIM_RIGHT:
+			xSpeed = straightHeadingSpeed;
+			ySpeed = 0;
+			break;
+		case AIM_DOWN_RIGHT:
+			xSpeed = angularHeadingSpeed;
+			ySpeed = -angularHeadingSpeed;
+			break;
+		case AIM_DOWN:
+			xSpeed = 0;
+			ySpeed = straightHeadingSpeed;
+			break;
+		case AIM_DOWN_LEFT:
+			xSpeed = -angularHeadingSpeed;
+			ySpeed = -angularHeadingSpeed;
+			break;
+		default:
+			break;
+		} 
+		
+		Vector2 bulletVelocity = new Vector2(xSpeed, ySpeed);
+		bullet.setVelocity(bulletVelocity);
 		projectiles.shoot(bullet);
 	}
 
@@ -297,7 +374,11 @@ public class Player extends RichGameObject {
 		super.animate(deltaTime);
 		if(speed != 0.0f) {
 			if (direction == DIRECTION_NONE) {
-				gameObjectTexture = rightWalk.getKeyFrame(stateTime, true);
+				if(lastKnownDirection == DIRECTION_LEFT) {
+					gameObjectTexture = leftWalk.getKeyFrame(0, true);
+				} else {
+					gameObjectTexture = rightWalk.getKeyFrame(0, false);
+				}
 			} else if (direction == DIRECTION_RIGHT) {
 				if ((isJumping() && !isDead) || gravity < 0) {
 					gameObjectTexture = rightJump.getKeyFrame(stateTime, false);
