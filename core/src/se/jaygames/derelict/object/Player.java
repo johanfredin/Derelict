@@ -13,8 +13,10 @@ import se.jaygames.derelict.utils.Loader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -22,16 +24,23 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Player extends RichGameObject {
 
-	private final float DEFAULT_SPEED = 150f * Settings.GAMESPEED;
+	private final float DEFAULT_SPEED 	  = 150f * Settings.GAMESPEED;
 	private final float ANIM_SPEED_NORMAL = 0.10f;
-	private final byte AIM_LEFT 		= 0;
-	private final byte AIM_UP_LEFT 		= 1;
-	private final byte AIM_UP 			= 2;
-	private final byte AIM_UP_RIGHT 	= 4;
-	private final byte AIM_RIGHT 		= 8;
-	private final byte AIM_DOWN_RIGHT 	= 16;
-	private final byte AIM_DOWN 		= 32;
-	private final byte AIM_DOWN_LEFT 	= 64;
+	
+	public final byte DIRECTION_LEFT = 0;
+	public final byte DIRECTION_RIGHT = 1;
+	public final byte DIRECTION_UP = 2;
+	public final byte DIRECTION_DOWN = 4;
+	public final byte DIRECTION_NONE = 8;
+	
+	private final byte AIM_LEFT 		= DIRECTION_LEFT;
+	private final byte AIM_UP_LEFT 		= 3;
+	private final byte AIM_UP 			= DIRECTION_UP;
+	private final byte AIM_UP_RIGHT 	= 5;
+	private final byte AIM_RIGHT 		= DIRECTION_RIGHT;
+	private final byte AIM_DOWN_RIGHT 	= 7;
+	private final byte AIM_DOWN 		= DIRECTION_DOWN;
+	private final byte AIM_DOWN_LEFT 	= 9;
 	
 	private byte currentAim;
 	private float tempvelocity;
@@ -80,7 +89,7 @@ public class Player extends RichGameObject {
 		this.isVisible = true;
 		
 		this.bulletTexture = new TextureRegion((Texture) Assets.getInstance().get(Loader.TEST_PATH + "bullet.png"));
-		this.projectiles = new Projectiles(10, 160, .1f, input);
+		this.projectiles = new Projectiles(10, 160, .1f);
 	}
 
 	/**
@@ -120,12 +129,15 @@ public class Player extends RichGameObject {
 		return deathFromFalling;
 	}
 
+	BitmapFont font = new BitmapFont();
 	@Override
 	public void render(SpriteBatch batch) {
+		font.setColor(Color.RED);
 		if (isVisible) {
 			// We only draw the player if it should be visible
 			projectiles.render(batch);
 			batch.draw(gameObjectTexture, position.x, position.y);
+			font.drawMultiLine(batch, "Current Aim = " + currentAim + "\nCurrent Dir = " + direction, position.x -150, position.y + 80);
 		}
 	}
 
@@ -211,16 +223,16 @@ public class Player extends RichGameObject {
 		/*
 		 * Update the velocity
 		 */
-		velocity.set(0.0f,  deltatime * (gravity + tempvelocity / 2.0f));
+//		velocity.set(0.0f,  deltatime * (gravity + tempvelocity / 2.0f));
 		// Set the direction of the cow and move it unless its time to tap ---
-		if (isHeadingLeft() && !isGoalReached) {
-			velocity.set(deltatime * this.speed, deltatime * (gravity + tempvelocity / 2.0f));
-		} else if (isHeadingRight() && !isGoalReached) {
-			velocity.set(deltatime * -this.speed, deltatime * (gravity + tempvelocity / 2.0f));
-		} else if (direction == DIRECTION_NONE && !isJumpButtonPressed || isGoalReached) {
-			velocity.set(0.0f, deltatime * (gravity + tempvelocity / 2.0f));
-		}
-		
+//		if (isHeadingLeft() && !isGoalReached) {
+//			velocity.set(deltatime * this.speed, deltatime * (gravity + tempvelocity / 2.0f));
+//		} else if (isHeadingRight() && !isGoalReached) {
+//			velocity.set(deltatime * -this.speed, deltatime * (gravity + tempvelocity / 2.0f));
+//		} else if (direction == DIRECTION_NONE && !isJumpButtonPressed || isGoalReached) {
+//			velocity.set(0.0f, deltatime * (gravity + tempvelocity / 2.0f));
+//		}
+//		
 		/*
 		 * Try to move the player with the new velocity
 		 */
@@ -232,13 +244,12 @@ public class Player extends RichGameObject {
 			newPosition.sub(velocity);
 		}
 
-		tryMove(newPosition);
+//		tryMove(newPosition);
 
 		// Update the gravity with the temporary velocity to be used in the next
 		// cycle
 		gravity += tempvelocity;
 
-		//TODO:Just to kill player while testing
 		if(Gdx.input.isKeyPressed(Keys.BACKSPACE)) {
 			kill();
 		}
@@ -259,30 +270,30 @@ public class Player extends RichGameObject {
 			currentAim = AIM_RIGHT;
 		} 
 		
-		 if(input.isUpLeftButtonPressed()) {
-			currentAim = AIM_UP_LEFT;
-		} if(input.isUpButtonPressed()) {
+		if(input.isUpButtonPressed()) {
 			currentAim = AIM_UP;
+		} if(input.isUpLeftButtonPressed()) {
+			currentAim = AIM_UP_LEFT;
 		} if(input.isUpRightButtonPressed()) {
 			currentAim = AIM_UP_RIGHT;
-		} if(input.isDownRightButtonPressed()) {
-			currentAim = AIM_DOWN_RIGHT;
 		} if(input.isDownButtonPressed()) {
 			currentAim = AIM_DOWN;
-		} if(input.isDownLeftButtonPressed()) {
+		}if(input.isDownRightButtonPressed()) {
+			currentAim = AIM_DOWN_RIGHT;
+		}  if(input.isDownLeftButtonPressed()) {
 			currentAim = AIM_DOWN_LEFT;
 		} 
 		
 		
+		if(input.noMovementKeysPressed()) { 
+			direction = DIRECTION_NONE;
+			currentAim = lastKnownDirection;
+		}
 		
 		if(input.isShootButtonPressed()) {
 			shoot();
 		} 
 		
-		if(input.noMovementKeysPressed()) {
-			direction = DIRECTION_NONE;
-			currentAim = lastKnownDirection;
-		}
 	}
 	
 	private void shoot() {
@@ -319,7 +330,7 @@ public class Player extends RichGameObject {
 			break;
 		case AIM_DOWN:
 			xSpeed = 0;
-			ySpeed = straightHeadingSpeed;
+			ySpeed = -straightHeadingSpeed;
 			break;
 		case AIM_DOWN_LEFT:
 			xSpeed = -angularHeadingSpeed;
@@ -359,9 +370,7 @@ public class Player extends RichGameObject {
 			isCollidingWithWall = true;
 			if (!onGround) {
 				checkIfTimeForWallJump();
-			} else {
-				//TODO: Set speed to 0;
-			}
+			} 
 			setPosition(position.x, position.y);
 		} else {
 			isCollidingWithWall = false;

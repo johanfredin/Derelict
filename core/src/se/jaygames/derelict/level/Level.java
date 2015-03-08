@@ -42,6 +42,7 @@ public class Level extends TiledMapLevel<GameScreen> {
 		this.collisionHandler = new CollisionHandler(super.tiledMapUtils);
 		MapObject spawnObject = super.tiledMapUtils.getMapObject("objects-32px", "spawn");
 		Vector2 spawnPoint = super.tiledMapUtils.getVector2(spawnObject, "x", "y");
+		spawnPoint.y += 64;
 		
 		this.player = new Player(spawnPoint, baseInput, collisionHandler);
 		
