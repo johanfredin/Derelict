@@ -4,19 +4,20 @@ import se.fredin.gdxtensions.assetmanagement.Assets;
 import se.fredin.gdxtensions.collision.CollisionHandler;
 import se.fredin.gdxtensions.collision.CollisionHandler.Filter;
 import se.fredin.gdxtensions.input.BaseInput;
+import se.fredin.gdxtensions.object.BasicGameObject;
 import se.fredin.gdxtensions.object.RichGameObject;
-import se.fredin.gdxtensions.object.projectile.Projectile;
-import se.fredin.gdxtensions.object.projectile.Projectiles;
+import se.fredin.gdxtensions.object.weapon.Projectile;
+import se.fredin.gdxtensions.object.weapon.Weapon;
 import se.fredin.gdxtensions.utils.AnimationUtils;
 import se.fredin.gdxtensions.utils.Settings;
+import se.fredin.gdxtensions.utils.logging.OnScreenLogUtils;
+import se.jaygames.derelict.object.weapon.PeaShooter;
 import se.jaygames.derelict.utils.Loader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -58,7 +59,7 @@ public class Player extends RichGameObject {
 	private Animation leftFall, rightFall;
 	private Animation rightHurt, leftHurt;
 
-	private Projectiles projectiles;
+	private Weapon projectiles;
 	private TextureRegion bulletTexture;
 	
 	public Player(Vector2 position, BaseInput input, CollisionHandler collisionHandler) {
@@ -89,7 +90,7 @@ public class Player extends RichGameObject {
 		this.isVisible = true;
 		
 		this.bulletTexture = new TextureRegion((Texture) Assets.getInstance().get(Loader.TEST_PATH + "bullet.png"));
-		this.projectiles = new Projectiles(10, 160, .1f);
+		this.projectiles = new PeaShooter(input);
 	}
 
 	/**
@@ -129,15 +130,13 @@ public class Player extends RichGameObject {
 		return deathFromFalling;
 	}
 
-	BitmapFont font = new BitmapFont();
 	@Override
 	public void render(SpriteBatch batch) {
-		font.setColor(Color.RED);
 		if (isVisible) {
 			// We only draw the player if it should be visible
 			projectiles.render(batch);
 			batch.draw(gameObjectTexture, position.x, position.y);
-			font.drawMultiLine(batch, "Current Aim = " + currentAim + "\nCurrent Dir = " + direction, position.x -150, position.y + 80);
+			OnScreenLogUtils.log(batch, position.x - 150, position.y + 80, "Current Aim = " + currentAim, "Current Dir = " + direction, "Ammo = " + projectiles.getAmmo());;
 		}
 	}
 
@@ -178,7 +177,7 @@ public class Player extends RichGameObject {
 	}
 
 	@Override
-	public void tick(float deltatime, RichGameObject player) {
+	public void tick(float deltatime, BasicGameObject player) {
 		// Enter debug ticking mode if that is enabled
 		if (Settings.FREE_FLYING_MODE) {
 			debugTick(deltatime);
