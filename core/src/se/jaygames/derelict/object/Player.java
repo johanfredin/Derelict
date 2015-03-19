@@ -4,14 +4,13 @@ import se.fredin.gdxtensions.assetmanagement.Assets;
 import se.fredin.gdxtensions.collision.CollisionHandler;
 import se.fredin.gdxtensions.collision.CollisionHandler.Filter;
 import se.fredin.gdxtensions.input.BaseInput;
-import se.fredin.gdxtensions.object.BasicGameObject;
 import se.fredin.gdxtensions.object.RichGameObject;
 import se.fredin.gdxtensions.object.weapon.Projectile;
 import se.fredin.gdxtensions.object.weapon.Weapon;
+import se.fredin.gdxtensions.object.weapon.semi.PeaShooter;
 import se.fredin.gdxtensions.utils.AnimationUtils;
 import se.fredin.gdxtensions.utils.Settings;
 import se.fredin.gdxtensions.utils.logging.OnScreenLogUtils;
-import se.jaygames.derelict.object.weapon.PeaShooter;
 import se.jaygames.derelict.utils.Loader;
 
 import com.badlogic.gdx.Gdx;
@@ -177,7 +176,7 @@ public class Player extends RichGameObject {
 	}
 
 	@Override
-	public void tick(float deltatime, BasicGameObject player) {
+	public void tick(float deltatime) {
 		// Enter debug ticking mode if that is enabled
 		if (Settings.FREE_FLYING_MODE) {
 			debugTick(deltatime);
@@ -253,7 +252,7 @@ public class Player extends RichGameObject {
 			kill();
 		}
 		
-		projectiles.tick(deltatime, null);
+		projectiles.tick(deltatime);
 		
 	}
 	

@@ -52,7 +52,7 @@ public class Level extends TiledMapLevel<GameScreen> {
 
 	@Override
 	public void tick(float deltaTime) {
-		player.tick(deltaTime, null);
+		player.tick(deltaTime);
 		camera.follow(player.getPosition());
 		dialogs.tick(deltaTime);
 	}
