@@ -7,8 +7,8 @@ gwt {
     minHeapSize="1G"
 
     src = files(file("src/")) // Needs to be in front of "modules" below.
-    modules 'se.jaygames.derelict.GdxDefinition'
-    devModules 'se.jaygames.derelict.GdxDefinitionSuperdev'
+    modules 'com.jaygames.derelict.GdxDefinition'
+    devModules 'com.jaygames.derelict.GdxDefinitionSuperdev'
     project.webAppDirName = 'webapp'
 
     compiler {
